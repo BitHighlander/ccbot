@@ -1,0 +1,31 @@
+{
+  "name": "slack-bridge",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "ts-node __tests__/test-module.js",
+    "start-dev": "ts-node index",
+    "start": "node lib/index",
+    "build": "tsc -p .",
+    "prepublish": "tsc -p .",
+    "build:live": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' app.ts",
+    "docker:build": "docker build -t pioneer/discord-bridge:latest .",
+    "docker:tag": "docker tag pioneer/discord-bridge:latest registry.digitalocean.com/pioneer/pioneer/discord-bridge:latest",
+    "docker:push": "docker push registry.digitalocean.com/pioneer/pioneer/discord-bridge:latest",
+    "docker:push:all": "npm run docker:build && npm run docker:tag && npm run docker:push"
+  },
+  "dependencies": {
+    "@foxcookieco/pioneer-default-redis": "latest",
+    "@foxcookieco/pioneer-loggerdog-client": "latest",
+    "@foxcookieco/pioneer-mongo-default-env": "latest",
+    "discord.js": "^12.5.3",
+    "dotenv": "^8.2.0",
+    "sentence-tokenizer": "^1.0.1",
+    "ts-node": "^8.6.2",
+    "wait-promise": "^0.4.1"
+  },
+  "devDependencies": {
+    "@types/node": "^13.7.0",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.7.5"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "name": "coincap-slack-v3",
+  "version": "1.0.0",
+  "main": "./app.ts",
+  "types": "./app.d.ts",
+  "scripts": {
+    "test": "ts-node __tests__/test-module.js",
+    "start-dev": "npm run build && npm run start",
+    "start": "node lib/app.js",
+    "build": "tsc -p .",
+    "prepublish": "tsc -p .",
+    "docker:build": "docker build -t pioneer/ccbot:latest .",
+    "docker:tag": "docker tag pioneer/ccbot:latest registry.digitalocean.com/pioneer/pioneer/ccbot:latest",
+    "docker:push": "docker push registry.digitalocean.com/pioneer/pioneer/ccbot:latest",
+    "docker:push:all": "npm run docker:build && npm run docker:tag && npm run docker:push"
+  },
+  "dependencies": {
+    "@pioneer-platform/default-redis": "latest",
+    "@pioneer-platform/loggerdog": "latest",
+    "@pioneer-platform/default-mongo": "latest",
+    "asciichart": "^1.5.9",
+    "dotenv": "^8.2.0",
+    "graphql-request": "^1.8.2",
+    "random-hex-color": "^1.0.1",
+    "rivescript": "^2.0.0",
+    "sentence-tokenizer": "^1.0.1",
+    "slackbots": "^1.2.0",
+    "ts-node": "^8.6.2",
+    "urban": "^0.3.2",
+    "when": "^3.7.8"
+  },
+  "devDependencies": {
+    "@types/node": "^13.7.0",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.7.5"
+  }
+}
