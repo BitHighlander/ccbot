@@ -1,7 +1,6 @@
 SHELL=/bin/bash
 
 env=prod
-
 .DEFAULT_GOAL := build
 
 clean::
@@ -10,11 +9,9 @@ clean::
 build::
 	sh scripts/build.sh
 
-#NOTE the tsoa server requires the swaggar doc to be in a spefic place
 dev::
-	pm2 start process.json && cd services/rest && npm run start
+	pm2 start process.json
 
-#TODO
 test::
 	echo $(env)
 

@@ -1,6 +1,11 @@
 {
   "name": "pioneer-server",
   "version": "1.0.0",
+  "scripts": {
+    "start-dev": "make && make dev",
+    "build": "make && make push",
+    "update": "make up"
+  },
   "dependencies": {
   }
 }
