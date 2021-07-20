@@ -5,7 +5,7 @@
   "types": "./app.d.ts",
   "scripts": {
     "test": "ts-node __tests__/test-module.js",
-    "start-dev": "npm run build && npm run start",
+    "dev": "npm run build && npm run start",
     "start": "node lib/app.js",
     "build": "tsc -p .",
     "prepublish": "tsc -p .",

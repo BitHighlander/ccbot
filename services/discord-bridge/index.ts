@@ -17,16 +17,11 @@ require('dotenv').config({path:"../../../../../.env"});
 let log = require("@foxcookieco/pioneer-loggerdog-client")()
 const {redis,subscriber,publisher} = require("@foxcookieco/pioneer-default-redis")
 
-if(!process.env.SLACK_TOKEN) throw Error("slack token not found~! ")
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 
 const botName = 'cappy'
 const defaultChannelName = "markets"
-
-//if default is private channel
-let SLACK_IS_PRIVATE = process.env.SLACK_IS_PRIVATE
-
 const Tokenizer = require('sentence-tokenizer')
 const tokenizer = new Tokenizer('reddit')
 
@@ -54,36 +49,42 @@ bot.on('ready', () => {
 subscriber.subscribe('publish')
 subscriber.on('message', async function (channel:any, payloadS:string) {
   try {
+    if(msg.author && msg.author.id !== '865670112611008524'){
+      let payload = JSON.parse(payloadS)
+      log.info('payload: ', payload)
+      log.info('msg author id: ', msg.author)
+      log.info('msg author id: ', msg.author.id)
+      if (!payload.channel) throw Error('101: invalid payload missing: channel')
+      if (!payload.msg) throw Error('101: invalid payload missing: msg')
+      if (!payload.view) throw Error('101: invalid payload missing: view')
 
-    let payload = JSON.parse(payloadS)
-    log.info('payload: ', payload)
+      log.info('msg.channel.name: ', msg.channel.name)
+      if(msg.channel.name === '📈markets' || msg.channel.name === 'markets'){
+        log.info(tag,"WINNING!: ")
+        log.info(tag,"msg.emojis",msg.emojis)
+        //let emojiRef = "\:btc:"
+        // let emojiRef = msg.guild.emojis.cache.find((emoji: { name: string; }) => emoji.name === 'btc');
+        // emojiRef = "<:btc:595760361110634496>"
+        // log.info(tag,"emojiRef: ",emojiRef)
 
-    if (!payload.channel) throw Error('101: invalid payload missing: channel')
-    if (!payload.msg) throw Error('101: invalid payload missing: msg')
-    if (!payload.view) throw Error('101: invalid payload missing: view')
-
-    log.info('msg.channel.name: ', msg.channel.name)
-    if(msg.channel.name === '📈markets' || msg.channel.name === 'markets'){
-      log.info(tag,"WINNING!: ")
-
-      if(payload.view.text){
-        msg.channel.send(payload.view.text);
+        if(payload.view.text){
+          msg.channel.send(payload.view.text);
+        }
+        if(payload.view.attachments){
+          log.info("attachments: ",payload.view.attachments)
+          msg.channel.send(payload.msg);
+          if(payload.view.attachments[0].image_url){
+            msg.channel.send(payload.view.attachments[0].image_url);
+          }
+        } else {
+          log.error('Wrong channel: ',msg.channel.name)
+        }
       }
 
-      if(payload.view.attachments){
-        log.info("attachments: ",payload.view.attachments)
-        msg.channel.send(payload.msg);
-        msg.channel.send(payload.view.attachments[0].image_url);
-      }
-
-      // let result = await publishSlackMessage(payload.channel, payload.msg, payload.view)
-      // log.info('result: ', result)
     }
-
-
     // TODO if failed re-queue
   } catch (e) {
-    //console.error('Error: ', e)
+    console.error('Error: ', e)
   }
 })
 
@@ -92,7 +93,7 @@ bot.on('message', async function (data:any) {
     msg = data
     const debug = true
     const verbose = true
-    log.info("data: ",data)
+    // log.info("data: ",data)
     log.info("data: ",data.author.id)
     // log.info("data: ",data.content)
 

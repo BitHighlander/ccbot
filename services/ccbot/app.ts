@@ -141,7 +141,9 @@ subscriber.on("message", async function (channel:any, payloadS:string)
                 let channel = "publish"
                 slackOut.insert(message)
                 console.log({message, channel})
-                publisher.publish(channel,JSON.stringify(message))
+                if(message && channel){
+                    publisher.publish(channel,JSON.stringify(message))
+                }
             }
         } else if(channel === 'telegram'){
             let data = {
@@ -201,16 +203,12 @@ subscriber.on("message", async function (channel:any, payloadS:string)
 
 const deliberate_on_input = async function(session:any,data:any,username:any){
     const tag = " | deliberate_on_input | "
-    const debug = true
-    const debug1 = false
     try{
         let output:any = {}
         output.sentences = []
         log.info(tag,"session: ",session)
         log.info(tag,"data: ",data)
         log.info(tag,"username: ",username)
-        //save context
-        //await( redis.sadd(session,data.text))
 
         //Who am I talking too?
         let userInfo = await redis.hgetall(data.user)
@@ -218,18 +216,6 @@ const deliberate_on_input = async function(session:any,data:any,username:any){
         if(!userInfo) await redis.hmset(data.user,data)
         userInfo = data
         log.debug(tag,"userInfo: ",userInfo)
-
-        //under what context?
-        // const context = await redis.smembers(session)
-        // if(debug1) console.log(tag,"context: ",context)
-
-        //commands
-
-
-        //state
-        //let state = await( redis.hgetall()
-
-        //change of state
 
         tokenizer.setEntry(data.text);
         const sentences = tokenizer.getSentences()
@@ -368,104 +354,6 @@ const deliberate_on_input = async function(session:any,data:any,username:any){
 
         }
 
-
-        //
-        // //
-        //
-        // //preprocessing
-
-        //
-        // //for each sentence
-        // for (let i = 0; i < sentences.length; i++) {
-        //     switch (tokens[0]){
-        //         case 'help':
-        //             // let task = {
-        //             //     type:'view',
-        //             //     platform:'slack',
-        //             //     id:''
-        //             // }
-        //             //let params = await request.help()
-        //             //log.debug(tag,"params: ",params)
-        //             output.view = params
-        //             output.sentences.push("this is a unhelpfull help message.")
-        //             break
-        //         case 'refresh':
-        //             output.sentences.push(rive.initialize())
-        //             break
-        //         case "learn":
-        //             log.debug(tag,"checkpoint learn: ")
-        //             if(tokens[1] === 'commands'){
-        //                 //iterate over tokens
-        //
-        //
-        //             }else{
-        //                 // a command was handled and action taken
-        //                 log.debug(tag,"learn detected! ")
-        //                 log.debug(tag,"tokens: ",tokens)
-        //                 //MUST have CHAL:  and RESP:
-        //                 let chalPlacement = tokens.indexOf("CHAL:")
-        //                 let respPlacement = tokens.indexOf("RESP:")
-        //                 if(chalPlacement >= 0 && respPlacement >= 0){
-        //
-        //                     //write RIVE
-        //                     //if CMD: assume command
-        //                     //is command logical?
-        //
-        //                     //else string
-        //                     //combine tokens
-        //                     let chalStart = chalPlacement + 1
-        //                     let respStart = respPlacement
-        //                     let trigger = ""
-        //                     for (let i = chalStart; i < respPlacement; i++) {
-        //                         trigger = trigger+" "+tokens[i]
-        //                     }
-        //
-        //                     let response = ""
-        //                     for (i = respPlacement + 1; i < tokens.length; i++) {
-        //                         if(tokens[i] == "&lt;star&gt;") {
-        //                             response = response+" <star>"
-        //                         } else {
-        //                             response = response+" "+tokens[i]
-        //                         }
-        //                     }
-        //
-        //                     let success = await rive.create(trigger,response)
-        //                     log.debug(tag,"success: ",success)
-        //
-        //
-        //                     output.sentences.push(success)
-        //                 }else {
-        //                     //else failed to learn
-        //                     //dump how to learn
-        //                     output.sentences.push("not a valid lesion asshole! requirements CHAL: AND RESP:")
-        //                 }
-        //
-        //             }
-        //
-        //
-        //
-        //
-        //
-        //             break
-        //         case "state":
-        //             output.sentences.push("state is "+state)
-        //             //ignore
-        //             break
-        //         default:
-        //             const response = await( rive.respond(sentences[i]))
-        //             log.debug(tag,"response: ",response)
-        //             if(response != "ERR: No Reply Matched"){
-        //                 output.sentences.push(response)
-        //             }
-        //
-        //
-        //
-        //             break
-        //     }
-        // }
-        //
-        //
-        // //rivescript commands
         for (let i = 0; i < output.sentences.length; i++) {
             log.debug(tag,"output: ",output[i])
             //if contains a CMD: assume command
@@ -483,29 +371,15 @@ const deliberate_on_input = async function(session:any,data:any,username:any){
                 const commandTokens = tokenizer.getTokens(command)
                 log.debug(tag,"commandTokens: ",commandTokens)
 
-                //
-                if(username === "U70MM0X9B") username = "pioneer"
-                //let result = await request.commands(commandTokens,username)
-
                 let result = " beeboop"
 
                 console.log(tag,"result:", result)
-
-                //const view = create_view_smart(result)
-                //console.log(tag,"view:", view)
                 output.sentences.push(JSON.stringify(result))
 
             }
         }
-        //
-        //
-        // if(output.length == 0){
-        //     //if unknowns use api's
-        //
-        // }
-        //
-        //
-        // //remove commands
+
+        //remove commands
         for (let i = 0; i < output.sentences.length; i++) {
             if(output.sentences[i] != true && output.sentences[i].indexOf("CMD:") >= 0){
                 output.sentences.splice(i, 1);

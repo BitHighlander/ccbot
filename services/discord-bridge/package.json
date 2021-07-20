@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "test": "ts-node __tests__/test-module.js",
-    "start-dev": "ts-node index",
+    "dev": "npm run build && npm run start",
     "start": "node lib/index",
     "build": "tsc -p .",
     "prepublish": "tsc -p .",

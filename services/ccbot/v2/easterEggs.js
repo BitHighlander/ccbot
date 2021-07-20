@@ -3,7 +3,7 @@ const staticCommands = {
     attachments: [
       {
         fallback: "brent",
-        image_url: "https://slack-files.com/T0ZGDFQ4R-F016H1Z1N3G-26a1a26add",
+        image_url: "https://slack-files.com/T0ZGDFQ4R-F016H1Z1N3G-26a1a26",
       },
     ],
   },
@@ -11,7 +11,7 @@ const staticCommands = {
     attachments: [
       {
         fallback: "tshifty",
-        image_url: "https://foxcookieco.slack.com/files/U0ZNEBVAS/F01TBJCKPQX/screen_shot_2021-04-08_at_11.47.16_pm.png",
+        image_url: "https://imgur.com/C9K8eg3",
       },
     ],
   },
@@ -19,7 +19,7 @@ const staticCommands = {
     attachments: [
       {
         fallback: "mogie",
-        image_url: "https://foxcookieco.slack.com/files/U0ZNEBVAS/F01TYDBUYLU/screen_shot_2021-04-08_at_9.43.42_pm.png",
+        image_url: "https://imgur.com/XDA7F5U",
       },
     ],
   },
@@ -28,7 +28,7 @@ const staticCommands = {
       {
         fallback: "sean",
         image_url:
-          "https://foxcookieco.slack.com/files/U8M2B4M2A/FDCCY7KNF/sean.png",
+          "https://imgur.com/fN7bq7g",
       },
     ],
   },
@@ -37,7 +37,7 @@ const staticCommands = {
       {
         fallback: "chase",
         image_url:
-          "https://foxcookieco.slack.com/files/U8M2B4M2A/FDCFK4750/chase.png",
+          "https://imgur.com/jkQdD2L",
         color: "#ffa500",
       },
     ],
@@ -55,7 +55,7 @@ const staticCommands = {
       {
         fallback: "november",
         image_url:
-          "https://files.slack.com/files-pri/T0ZGDFQ4R-F01EK2J41U5/300x250_shifty_guy_v2__1_.gif",
+          "https://imgur.com/0YDMjC3",
       },
     ],
   },
@@ -64,7 +64,7 @@ const staticCommands = {
       {
         fallback: "charls",
         image_url:
-          "https://files.slack.com/files-pri/T0ZGDFQ4R-FQF0M1Q8K/screen_shot_2019-11-20_at_10.15.05_am.png",
+          "https://imgur.com/SQqUFom",
       },
     ],
   },
@@ -73,7 +73,7 @@ const staticCommands = {
       {
         fallback: "stoner",
         image_url:
-          "https://files.slack.com/files-pri/T0ZGDFQ4R-FLS0P4NEQ/ccstoner.png",
+          "https://imgur.com/XC8ujEK",
       },
     ],
   },
@@ -82,7 +82,7 @@ const staticCommands = {
       {
         fallback: "stoner",
         image_url:
-          "https://files.slack.com/files-pri/T0ZGDFQ4R-FLS0P4NEQ/ccstoner.png",
+          "https://imgur.com/ob2DcHc",
       },
     ],
   },
@@ -91,7 +91,7 @@ const staticCommands = {
       {
         fallback: "tarnhelm",
         image_url:
-          "https://files.slack.com/files-pri/T0ZGDFQ4R-F01LVQZLQ0N/screen_shot_2021-02-04_at_3.39.13_pm.png",
+          "https://imgur.com/hnGsiBI",
       },
     ],
   },
@@ -108,7 +108,7 @@ const staticCommands = {
       {
         fallback: "luther",
         image_url:
-          "https://files.slack.com/files-pri/T0ZGDFQ4R-F013CCUP35G/image_from_ios.png",
+          "https://imgur.com/mbMqO1W",
       },
     ],
   },
@@ -125,7 +125,7 @@ const staticCommands = {
       {
         fallback: "jake",
         image_url:
-          "https://files.slack.com/files-pri/T0ZGDFQ4R-F01M2JBRCHY/screen_shot_2021-02-04_at_3.55.25_pm.png",
+          "https://imgur.com/cFR0oP4",
       },
     ],
   },
@@ -134,7 +134,7 @@ const staticCommands = {
       {
         fallback: "jake",
         image_url:
-          "https://foxcookieco.slack.com/files/U0ZNEBVAS/F01MF4ESCG1/jake.png",
+          "https://imgur.com/2I4r2NI",
       },
     ],
   },
@@ -143,7 +143,7 @@ const staticCommands = {
       {
         fallback: "leon",
         image_url:
-          "https://files.slack.com/files-pri/T0ZGDFQ4R-FDDA62J13/leon.jpg",
+          "https://imgur.com/5DeOPRs",
       },
     ],
   },
@@ -152,14 +152,14 @@ const staticCommands = {
       {
         fallback: "al",
         image_url:
-          "https://files.slack.com/files-pri/T0ZGDFQ4R-FP97J6QJD/image.png",
+          "https://imgur.com/y1ZYlx5",
       },
     ],
   },
   oncall:{
     attachments: [{
       fallback: "mills",
-      image_url: "https://foxcookieco.slack.com/files/U9VJYLG48/F01MCUUMLCA/image.png"
+      image_url: "https://imgur.com/eEaHpqY"
     }]
   },
   mills: {
@@ -167,7 +167,7 @@ const staticCommands = {
       {
         fallback: "mills",
         image_url:
-          "https://files.slack.com/files-pri/T0ZGDFQ4R-F01KYPCJW57/image_from_ios__5_.jpg",
+          "https://imgur.com/UL1Z6Sn",
       },
     ],
   },
@@ -299,7 +299,7 @@ const staticCommands = {
       {
         fallback: "beorn",
         image_url:
-          "https://foxcookieco.slack.com/files/U4U0Q51S8/FU3988TFZ/image.png",
+          "https://imgur.com/mndxQp6",
       },
     ],
   },

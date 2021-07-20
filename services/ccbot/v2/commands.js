@@ -43,7 +43,11 @@ const getMarketData = async (symbols, inCurrencySymbol = 'usd') => {
 
     isXRP = marketData.symbol === 'XRP';
 
-    const symbol = isXRP ? '*X:poopfire:P*' : `<https://coincap.io/assets/${marketData.id}|*${marketData.symbol}*>`;
+    //const symbol = isXRP ? '*X:poopfire:P*' : `https://assets.coincap.io/assets/icons/${marketData.symbol.toLowerCase()}@2x.png`;
+    //get emoji symbol
+
+
+    const symbol = isXRP ? '*X:poopfire:P*' : `${marketData.symbol.toLowerCase()}`;
     let emoji = isXRP ? ':poop:' : `:${marketData.symbol.toLowerCase()}:`;
     // Fix BAT emoji
     if (emoji === ':bat:') {

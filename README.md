@@ -21,8 +21,9 @@ make dev
 
 Create account on leeroy
 
-push new image to erc
+push new images to erc
 ```
+make push
 ```
 
 rollout/update images on leeroy server
