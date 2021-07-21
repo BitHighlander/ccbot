@@ -1,5 +1,5 @@
 {
-  "name": "coincap-slack-v3",
+  "name": "ccbot",
   "version": "1.0.0",
   "main": "./app.ts",
   "types": "./app.d.ts",

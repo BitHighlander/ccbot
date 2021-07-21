@@ -8,7 +8,7 @@
  */
 const TAG = " | liveness | "
 require("dotenv").config({path:'./../../.env'})
-const log = require('@foxcookieco/pioneer-loggerdog-client')()
+const log = require('@pioneer-platform/loggerdog')()
 //let network = require("@foxcookieco/pioneer-monero-network")
 //network.init('full')
 //const find = require('find-process');

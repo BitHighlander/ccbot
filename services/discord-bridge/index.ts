@@ -14,8 +14,8 @@ require('dotenv').config({path:"../../../.env"});
 require('dotenv').config({path:"../../../../.env"});
 require('dotenv').config({path:"../../../../../.env"});
 
-let log = require("@foxcookieco/pioneer-loggerdog-client")()
-const {redis,subscriber,publisher} = require("@foxcookieco/pioneer-default-redis")
+let log = require("@pioneer-platform/loggerdog")()
+const {redis,subscriber,publisher} = require("@pioneer-platform/default-redis")
 
 const Discord = require('discord.js');
 const bot = new Discord.Client();

@@ -1,5 +1,5 @@
 {
-  "name": "slack-bridge",
+  "name": "discord-bridge",
   "version": "1.0.0",
   "scripts": {
     "test": "ts-node __tests__/test-module.js",
@@ -14,9 +14,9 @@
     "docker:push:all": "npm run docker:build && npm run docker:tag && npm run docker:push"
   },
   "dependencies": {
-    "@foxcookieco/pioneer-default-redis": "latest",
-    "@foxcookieco/pioneer-loggerdog-client": "latest",
-    "@foxcookieco/pioneer-mongo-default-env": "latest",
+    "@pioneer-platform/default-redis": "latest",
+    "@pioneer-platform/loggerdog": "latest",
+    "@pioneer-platform/default-mongo": "latest",
     "discord.js": "^12.5.3",
     "dotenv": "^8.2.0",
     "sentence-tokenizer": "^1.0.1",

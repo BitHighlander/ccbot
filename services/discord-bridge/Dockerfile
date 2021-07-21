@@ -5,9 +5,9 @@ FROM node:12
 #RUN npm install npm@5.3.0 -G
 #RUN mv node_modules/npm /usr/local/lib/node_modules/npm
 #RUN rm -rf /usr/local/lib/node_modules/npm
-ARG NPM_TOKEN
-RUN echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > ./.npmrc
-RUN npm --version
+#ARG NPM_TOKEN
+#RUN echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > ./.npmrc
+#RUN npm --version
 
 #requirements for npm install
 #RUN apk add --update \

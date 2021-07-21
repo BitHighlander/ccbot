@@ -35,7 +35,7 @@ let views = require('../modules/views.js')
 let connection  = require("@pioneer-platform/default-mongo")
 let slackOut = connection.get("slackOut");
 
-
+const defaultChannelNameDiscord = process.env['DISCORD_BOT_CHANNEL'] || 'markets'
 const defaultChannelName = process.env['SLACK_CHANNEL_CCV3']
 const defaultChannelId = process.env['SLACK_CHANNELID_CCV3']
 
@@ -135,7 +135,7 @@ subscriber.on("message", async function (channel:any, payloadS:string)
                 //array to view
 
                 //publish response
-                message.channel = defaultChannelName
+                message.channel = 'markets'
 
                 log.debug(tag,"message: ",message)
                 let channel = "publish"
