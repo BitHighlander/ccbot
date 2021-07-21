@@ -82,7 +82,7 @@ const staticCommands = {
       {
         fallback: "ben",
         image_url:
-          "https://files.slack.com/files-pri/T0ZGDFQ4R-F01G3J6KVMY/ben.png",
+          "https://i.imgur.com/4PxxloQ.png",
       },
     ],
   },
@@ -91,7 +91,7 @@ const staticCommands = {
       {
         fallback: "internetmoney",
         image_url:
-          "https://files.slack.com/files-pri/T0ZGDFQ4R-F01G0SEUP7V/internetmoney.png",
+          "https://i.imgur.com/ahc68Vt.png",
       },
     ],
   },
@@ -100,7 +100,7 @@ const staticCommands = {
       {
         fallback: "runemoney",
         image_url:
-          "https://files.slack.com/files-pri/T0ZGDFQ4R-F01G0LYCDGS/runemoney.png",
+          "https://i.imgur.com/BGjSyhL.png",
       },
     ],
   },
@@ -138,7 +138,7 @@ const staticCommands = {
         image_url: "https://i.imgflip.com/40afm5.jpg",
         author_name: "beard",
         author_icon:
-          "https://ca.slack-edge.com/T0ZGDFQ4R-U012DT5MQ86-38a37f0c255f-72",
+          "https://i.imgur.com/y00z33Y.jpg",
         footer: "Don't be salty...",
       },
     ],
@@ -148,7 +148,7 @@ const staticCommands = {
       {
         fallback: "moonmaths",
         image_url:
-          "https://files.slack.com/files-pri/T0ZGDFQ4R-F01E26E70E9/img_6656.jpg",
+          "https://i.imgur.com/RYTl0Px.jpg",
       },
     ],
   },
