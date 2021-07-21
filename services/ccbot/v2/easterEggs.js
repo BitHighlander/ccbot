@@ -122,6 +122,15 @@ const staticCommands = {
       },
     ],
   },
+  ben: {
+    attachments: [
+      {
+        fallback: "ben",
+        image_url:
+          "https://files.slack.com/files-pri/T0ZGDFQ4R-F01G3J6KVMY/ben.png",
+      },
+    ],
+  },
   beard: {
     attachments: [
       {
