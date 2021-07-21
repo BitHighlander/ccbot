@@ -127,7 +127,7 @@ const staticCommands = {
       {
         fallback: "ben",
         image_url:
-          "https://files.slack.com/files-pri/T0ZGDFQ4R-F01G3J6KVMY/ben.png",
+          "https://i.imgur.com/4PxxloQ.png",
       },
     ],
   },
