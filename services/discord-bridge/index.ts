@@ -50,7 +50,7 @@ subscriber.on('message', async function (channel:any, payloadS:string) {
       if (!payload.view) throw Error('101: invalid payload missing: view')
 
       log.info('msg.channel.name: ', msg.channel.name)
-      if(msg.channel.name === '📈markets' || msg.channel.name === 'markets' || discordChannel){
+      if(msg.channel.name === '📈markets' || msg.channel.name === 'markets' || msg.channel.name === discordChannel){
         log.info(tag,"WINNING!: ")
         log.info(tag,"msg.emojis",msg.emojis)
 
@@ -126,22 +126,19 @@ subscriber.on('message', async function (channel:any, payloadS:string) {
           log.info("attachments: ",payload.view.attachments)
           // msg.channel.send(payload.msg);
           if(payload.view.attachments[0].image_url){
-            msg.channel.send(payload.view.attachments[0].image_url);
+            //msg.channel.send(payload.view.attachments[0].image_url);
 
-            // const attachment = new Discord.MessageEmbed()
-            //     .setColor("#0099ff")
-            //     .setAuthor(
-            //         "ccBot",
-            //         "payload.view.attachments[0].image_url",
-            //         "https://coincap.io/assets/fox-token"
-            //     )
-            //     .addFields(
-            //         { name: "Price", value: "$0.70", inline: true },
-            //         { name: "Change", value: "-8.00% 📈", inline: true, setColor: '#0099ff' },
-            //     )
-            //     .setTimestamp()
-            //     .setFooter("CoinCap", "https://iconape.com/wp-content/png_logo_vector/coincap.png");
-            // msg.channel.send(attachment);
+            const attachment = new Discord.MessageEmbed()
+                .setColor("#0099ff")
+                .setAuthor(
+                    payload.view.attachments[0].image_url,
+                )
+                .addFields(
+                    { name: "easter egg", value: payload.msg, inline: true },
+                )
+                .setTimestamp()
+                .setFooter("ccBot: ", payload.view.attachments[0].image_url);
+            msg.channel.send(attachment);
 
           }
         } else {
