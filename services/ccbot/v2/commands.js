@@ -74,7 +74,7 @@ const getMarketData = async (symbols, inCurrencySymbol = 'usd') => {
     }
 
     // Figure out 24% chnage emoji based on value.
-    let changeEmoji = percent24Hr >= 50 ? ':moon:' : percent24Hr >= 20 ? ':coincap_v2:' : percent24Hr >= 0 ? ':chart-up:' : percent24Hr <= -50 ? ':this_is_fine:' : percent24Hr <= -20 ? ':rekt:' : ':chart-down:';
+    let changeEmoji = percent24Hr >= 50 ? ':moon:' : percent24Hr >= 20 ? ':coincap_v2:' : percent24Hr >= 0 ? ':chart_with_upwards_trend:' : percent24Hr <= -50 ? ':this_is_fine:' : percent24Hr <= -20 ? ':rekt:' : ':chart_with_downwards_trend:';
     changeEmoji = isXRP ? ':sadpoop:' : changeEmoji;
 
     return `${symbol} ${emoji} *${unit}${value.toFixed(precision)}* ${changeEmoji} *${percent24Hr.toFixed(2)}%*`
@@ -150,6 +150,8 @@ const help = () => {
     \`ccv2 cf [coin1,coin2,coin3...coinN]\`
   Query your coinfolio
     \`ccv2 cf\`
+  Delete you coinfolio
+    \`cc delete\`  
 `
 }
 

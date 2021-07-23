@@ -50,7 +50,7 @@ subscriber.on('message', async function (channel:any, payloadS:string) {
       if (!payload.view) throw Error('101: invalid payload missing: view')
 
       log.info('msg.channel.name: ', msg.channel.name)
-      if(msg.channel.name === '📈markets' || msg.channel.name === 'markets' || msg.channel.name === discordChannel){
+      if(msg.channel.name === '📈markets' || msg.channel.name === 'markets'){
         log.info(tag,"WINNING!: ")
         log.info(tag,"msg.emojis",msg.emojis)
 
@@ -147,6 +147,7 @@ subscriber.on('message', async function (channel:any, payloadS:string) {
       }
 
     }
+    msg = null
     // TODO if failed re-queue
   } catch (e) {
     console.error('Error: ', e)
@@ -172,7 +173,7 @@ bot.on('message', async function (data:any) {
     // if (data.type === 'user_typing') return false
 
     //
-
+    data.user = data.author.id
 
     // is message
     if (data.type === 'DEFAULT') {
