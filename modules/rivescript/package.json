@@ -1,0 +1,19 @@
+{
+  "name": "@pioneer-platform/redis-queue",
+  "version": "8.1.6",
+  "main": "./lib/index.js",
+  "types": "./lib/main.d.ts",
+  "scripts": {
+    "run-test": "ts-node __tests__/test-module.js",
+    "build": "tsc",
+    "prepublish": "tsc"
+  },
+  "dependencies": {
+    "@pioneer-platform/default-redis": "^8.1.5",
+    "@pioneer-platform/loggerdog": "^8.1.5",
+    "@types/node": "^13.13.12",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.5"
+  },
+  "gitHead": "bd6db6ae5baf74242d698b0b30f25b3dcfdaf414"
+}

@@ -11,7 +11,7 @@
     "docker:build": "docker build -t pioneer/discord-bridge:latest .",
     "docker:tag": "docker tag pioneer/discord-bridge:latest registry.digitalocean.com/pioneer/pioneer/discord-bridge:latest",
     "docker:push": "docker push registry.digitalocean.com/pioneer/pioneer/discord-bridge:latest",
-    "docker:push:all": "npm run docker:build && npm run docker:tag && npm run docker:push"
+    "docker:push:all": "npm run build && npm run docker:build && npm run docker:tag && npm run docker:push"
   },
   "dependencies": {
     "@pioneer-platform/default-redis": "latest",

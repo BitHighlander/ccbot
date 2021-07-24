@@ -15,14 +15,6 @@
       "exec_mode": "cluster",
       "log_date_format": "MM-DD-YY HH:mm:ss.SSS",
       "kill_timeout": 10000
-    },
-    {
-      "script": "./services/slack-bridge/lib/index.js",
-      "name": "discord-bridge",
-      "instances": 1,
-      "exec_mode": "cluster",
-      "log_date_format": "MM-DD-YY HH:mm:ss.SSS",
-      "kill_timeout": 10000
     }
   ]
 }

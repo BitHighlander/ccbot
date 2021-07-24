@@ -1,50 +1,44 @@
-# build stage
-FROM node:12
-#FROM node:10
-
-#RUN npm install npm@5.3.0 -G
-#RUN mv node_modules/npm /usr/local/lib/node_modules/npm
-#RUN rm -rf /usr/local/lib/node_modules/npm
+#https://snyk.io/blog/10-best-practices-to-containerize-nodejs-web-applications-with-docker/
+# --------------> The build image
+FROM node:latest AS build
 ARG NPM_TOKEN
-RUN echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > ./.npmrc
-RUN npm --version
+WORKDIR /usr/src/app
+COPY package*.json /usr/src/app/
+RUN echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc && \
+   npm ci --only=production && \
+   rm -f .npmrc
 
-#requirements for npm install
-#RUN apk add --update \
-#    python \
-#    python-dev \
-#    py-pip \
-#    build-base \
-#  && pip install virtualenv \
-#  && rm -rf /var/cache/apk/*
+# --------------> The production image
+FROM node:lts-alpine@sha256:b2da3316acdc2bec442190a1fe10dc094e7ba4121d029cb32075ff59bb27390a
+RUN apk add dumb-init
+ENV NODE_ENV production
+USER node
+WORKDIR /usr/src/app
+COPY --chown=node:node --from=build /usr/src/app/node_modules /usr/src/app/node_modules
+COPY --chown=node:node . /usr/src/app
+CMD ["dumb-init", "node", "server.js"]
 
-#WORKDIR /app
-#COPY package*.json ./
+#FROM node:lts-alpine@sha256:b2da3316acdc2bec442190a1fe10dc094e7ba4121d029cb32075ff59bb27390a
+#WORKDIR /usr/src/app
+#COPY . /usr/src/app
 #RUN npm install
-COPY . .
+#CMD "npm" "start"
+
+
+# build stage
+#FROM node:12
+#
+#COPY . .
+#
+#WORKDIR .
+#
+#RUN npm install
+#
 #RUN npm run build
-
-# production stage
-#FROM node:8
-
-# Create app directory
-WORKDIR .
-
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-#COPY package*.json ./
-
-RUN npm install
-
-RUN npm run build
-
-# If you are building your code for production
-# RUN npm ci --only=production
-
-# Bundle app source
-COPY . .
-
-
-
-CMD [ "npm", "start" ]
+#
+## Bundle app source
+#COPY . .
+#
+#
+#
+#CMD [ "npm", "start" ]

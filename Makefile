@@ -10,7 +10,7 @@ build::
 	sh scripts/build.sh
 
 dev::
-	pm2 start process.json
+	pm2 start process.json --watch && pm2 logs
 
 test::
 	echo $(env)

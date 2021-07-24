@@ -34,6 +34,7 @@ let views = require('../modules/views.js')
 //mongo
 let connection  = require("@pioneer-platform/default-mongo")
 let slackOut = connection.get("slackOut");
+let discordIn = connection.get("discordIn");
 
 const defaultChannelNameDiscord = process.env['DISCORD_BOT_CHANNEL'] || 'markets'
 const defaultChannelName = process.env['SLACK_CHANNEL_CCV3']
@@ -116,10 +117,16 @@ subscriber.on("message", async function (channel:any, payloadS:string)
             let data = payload.data
             data.text = data.content
             let sentence = data.content
-            let username = data.user
+            let username = data.user || data.id
+            log.info(tag,"username: ",username)
             let channel = data.channel
             let session = "test"
+            let mongoSave = await discordIn.insert(data)
+            log.info(tag,"mongoSave: ",mongoSave)
+
             let response = await deliberate_on_input(session,data,username)
+            data.response = response
+
             if(response){
                 log.debug(tag,"response: ",response)
                 let message:any = {}
@@ -273,6 +280,7 @@ const deliberate_on_input = async function(session:any,data:any,username:any){
                     output.sentences.push(message)
                 } else if (firstToken === 'cf') {
                     const user = data.user;
+                    log.info(tag,"CF user: ",user)
                     let assets;
 
                     log.info("tokens.length: ",tokens.length)
@@ -296,7 +304,7 @@ const deliberate_on_input = async function(session:any,data:any,username:any){
                     } else {
                         message = await getMarketData(assets);
                     }
-
+                    message = "user: "+user+" "+message
                     output.sentences.push(message)
                 } else if (firstToken === 'chart') {
                     const message = await chart1d(tokens[2]);

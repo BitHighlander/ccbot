@@ -12,7 +12,7 @@
     "docker:build": "docker build -t pioneer/ccbot:latest .",
     "docker:tag": "docker tag pioneer/ccbot:latest registry.digitalocean.com/pioneer/pioneer/ccbot:latest",
     "docker:push": "docker push registry.digitalocean.com/pioneer/pioneer/ccbot:latest",
-    "docker:push:all": "npm run docker:build && npm run docker:tag && npm run docker:push"
+    "docker:push:all": "npm run build && npm run docker:build && npm run docker:tag && npm run docker:push"
   },
   "dependencies": {
     "@pioneer-platform/default-redis": "latest",

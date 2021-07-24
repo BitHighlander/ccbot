@@ -174,6 +174,7 @@ bot.on('message', async function (data:any) {
 
     //
     data.user = data.author.id
+    let user = data.author.id
 
     // is message
     if (data.type === 'DEFAULT') {
@@ -192,11 +193,9 @@ bot.on('message', async function (data:any) {
       let tokens = tokenizer.getTokens(output)
       if (verbose) log.info('tokens: ', tokens)
 
-      // publish to net
-      let user = 'unknown'
       let slackInput = { channel:'any', data, user, tokens }
 
-      if (debug) log.info('checkpoint3')
+      log.info('slackInput: ',slackInput)
       //if (debug) log.info('slackInput: ', slackInput)
       let result = await publisher.publish('discord', JSON.stringify(slackInput))
       if (debug) log.info('publish result: ', result)
