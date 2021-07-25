@@ -194,8 +194,7 @@ bot.on('message', async function (data:any) {
       if (verbose) log.info('tokens: ', tokens)
 
       let slackInput = { channel:'any', data, user, tokens }
-
-      log.info('slackInput: ',slackInput)
+      log.debug('slackInput: ',slackInput)
       //if (debug) log.info('slackInput: ', slackInput)
       let result = await publisher.publish('discord', JSON.stringify(slackInput))
       if (debug) log.info('publish result: ', result)

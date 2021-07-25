@@ -15,10 +15,11 @@
     "docker:push:all": "npm run build && npm run docker:build && npm run docker:tag && npm run docker:push"
   },
   "dependencies": {
+    "@pioneer-platform/default-mongo": "latest",
     "@pioneer-platform/default-redis": "latest",
     "@pioneer-platform/loggerdog": "latest",
-    "@pioneer-platform/default-mongo": "latest",
     "asciichart": "^1.5.9",
+    "discord.js": "^12.5.3",
     "dotenv": "^8.2.0",
     "graphql-request": "^1.8.2",
     "random-hex-color": "^1.0.1",
