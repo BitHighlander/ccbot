@@ -82,7 +82,7 @@ const getMarketData = async (symbols, inCurrencySymbol = 'usd') => {
     let changeEmoji = percent24Hr >= 50 ? ':moon:' : percent24Hr >= 20 ? ':coincap_v2:' : percent24Hr >= 0 ? ':chart_with_upwards_trend:' : percent24Hr <= -50 ? ':this_is_fine:' : percent24Hr <= -20 ? ':rekt:' : ':chart_with_downwards_trend:';
     changeEmoji = isXRP ? ':sadpoop:' : changeEmoji;
 
-    return `${symbol} ${emoji} *${unit}${value.toFixed(precision)}* ${changeEmoji} *${percent24Hr.toFixed(2)}%*`
+    return `${symbol} ${emoji} ${unit}${value.toFixed(precision)} ${changeEmoji} ${percent24Hr.toFixed(2)}%`
   });
 
   const message = messages.join("\n");

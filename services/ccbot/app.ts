@@ -81,7 +81,7 @@ bot.on('ready', () => {
 bot.on('message', async function (message:any) {
     let tag = " | discord message | "
     try {
-        log.info("message: ",message)
+        // log.info("message: ",message)
         log.info("user: ",message.author.id)
         log.info("channel: ",message.channel.name)
         log.info("content: ",message.content)
@@ -188,6 +188,7 @@ bot.on('message', async function (message:any) {
                                         name:coin,
                                         value:view.data[coin],
                                         inline: true,
+                                        setColor: '#ff002b'
                                     }
                                     allFields.push(entry)
                                 }
@@ -196,18 +197,88 @@ bot.on('message', async function (message:any) {
                                 const exampleEmbed = new Discord.MessageEmbed()
                                     .setColor("#0099ff")
                                     .setAuthor(
-                                        "Altfolio Balances",
-                                        "https://assets.coincap.io/assets/icons/"+publish[0]+"@2x.png",
-                                        "https://coincap.io/assets/"+publish[0]+""
+                                        'Your Account Balances'
                                     )
                                     .addFields(
                                         allFields
                                     )
+                                    .setTimestamp()
+                                    .setFooter("CoinCap", "https://iconape.com/wp-content/png_logo_vector/coincap.png");
+
 
                                 message.channel.send(exampleEmbed);
                                 break;
                             case 'cf':
                                 // code block
+                                let allFields2:any = []
+                                log.info(tag,"view.data: ",view.data)
+                                let split = view.data.split('\n')
+                                log.info(tag,"split: ",split)
+
+                                const exampleEmbedHeader = new Discord.MessageEmbed()
+                                    .setColor("#0099ff")
+                                    .setAuthor(
+                                        data.username+" Altfolio"
+                                    )
+                                    .setTimestamp()
+                                    .setFooter("CoinCap", "https://iconape.com/wp-content/png_logo_vector/coincap.png");
+                                message.channel.send(exampleEmbedHeader);
+
+                                let addData = []
+                                for(let i = 0; i < split.length; i++){
+                                    let coinData = split[i]
+                                    log.info(tag,"coinData: ",coinData)
+                                    let coin = coinData.split(' ')[0]
+
+                                    tokenizer.setEntry(coinData);
+                                    const sentences = tokenizer.getSentences()
+                                    log.info(tag,"sentences: ",sentences)
+                                    const tokens = tokenizer.getTokens(sentences)
+                                    log.info(tag,"tokens: ",tokens)
+
+                                    //lookup magic id
+                                    let emojiId = await message.guild.emojis.cache.find((emoji: { name: string; }) => emoji.name === coin);
+                                    log.info(tag,"emojiId: ",emojiId)
+
+                                    //
+                                    let emojiDiscord
+                                    if(emojiId){
+                                        emojiDiscord = "<:"+coin+":"+emojiId+">"
+                                    }
+                                    coinData = coinData.replace(coin,'')
+                                    let entry = {
+                                        name:emojiDiscord || coin,
+                                        value:coinData,
+                                        setColor: '#ff002b'
+                                    }
+                                    addData.push(entry)
+
+                                    const exampleEmbed = new Discord.MessageEmbed()
+                                        .setColor("#0099ff")
+                                        .setAuthor(
+                                            ""+coin.toUpperCase()+"",
+                                            "https://assets.coincap.io/assets/icons/"+coin+"@2x.png",
+                                            "https://coincap.io/assets/"+coin+""
+                                        )
+                                        .addFields(
+                                            { name: "Price", value: tokens[2], inline: true },
+                                            { name: "Change", value: tokens[3]+" "+tokens[4], inline: true, setColor: '#0099ff' },
+                                        )
+                                    message.channel.send(exampleEmbed);
+
+                                }
+                                // log.info(tag,"addData: ",addData)
+                                // //view to discord
+                                // const exampleEmbed2 = new Discord.MessageEmbed()
+                                //     .setColor("#0099ff")
+                                //     .setAuthor(
+                                //         "Altfolio"
+                                //     )
+                                //     .addFields(
+                                //         addData
+                                //     )
+                                //
+                                // message.channel.send(exampleEmbed2);
                                 break;
                             default:
                             // code block
@@ -267,7 +338,7 @@ const deliberate_on_input = async function(session:any,data:Data,username:string
         }
 
         //balances
-        if(tokens[0] === 'balance'){
+        if(tokens[0] === 'balance' || tokens[0] === 'balances'){
             let allBalances = await redis.hgetall(data.user+":balances")
             log.info(tag,"allBalances: ",allBalances)
             if(Object.keys(allBalances).length === 0){
@@ -359,8 +430,15 @@ const deliberate_on_input = async function(session:any,data:Data,username:string
                     } else {
                         message = await getMarketData(assets);
                     }
-                    message = "user: "+user+" "+message
-                    output.sentences.push(message)
+
+                    let view = {
+                        username,
+                        type:'cf',
+                        data:message,
+                    }
+                    output.views.push(view)
+                    // message = "user: "+user+" "+message
+                    // output.sentences.push(message)
                 } else if (firstToken === 'chart') {
                     const message = await chart1d(tokens[2]);
                     output.sentences.push(message)
