@@ -7,6 +7,11 @@ const asciichart = require('asciichart');
 const {redis,subscriber,publisher} = require("@pioneer-platform/default-redis")
 let log = require("@pioneer-platform/loggerdog")()
 
+const connection  = require("@pioneer-platform/default-mongo")
+const usersDB = connection.get('usersCCbot')
+// usersDB.createIndex({username: 1}, {unique: true})
+usersDB.createIndex({user: 1}, {unique: true})
+
 const getMarketData = async (symbols, inCurrencySymbol = 'usd') => {
   const marketDatas = await getMarketDataForSymbols(symbols);
 
@@ -93,13 +98,41 @@ const chart1d = async (symbol) => {
   return marketData + "\n" + chart;
 };
 
-const saveCF = async (user, assets) => {
+const saveCF = async (user, assets, username) => {
   let tag = " | saveCF | "
   try{
-    log.info(tag, "input: ",{user,assets})
+    log.info(tag, "input: ",{user,assets,username})
     for(let i = 0; i < assets.length; i++){
       let asset = assets[i]
-      redis.sadd(user+":altfolio",asset)
+      await redis.sadd(user+":altfolio",asset)
+    }
+
+    //get members
+    let portfolio = await redis.smembers(user+":altfolio")
+
+    //save to mongo
+    //get user from mongo
+    let userInfo = await usersDB.findOne({user})
+    log.info(tag, "userInfo: ",userInfo)
+    if(userInfo){
+      log.info(tag, "update user portfolio: ")
+      //for each symbol NOT in mongo
+      for(let i = 0; i < portfolio.length; i++){
+        let asset =  portfolio[i]
+        if(userInfo.portfolio.indexOf(asset) === -1){
+          //save
+          await usersDB.update({user},{ $addToSet: { "portfolio":asset } })
+        }
+      }
+    } else {
+      let userInfo = {
+        user,
+        username,
+        portfolio,
+      }
+      log.info(tag,"userInfo: ",userInfo)
+      let saveMongo = await usersDB.insert(userInfo)
+      log.info(tag,"saveMongo: ",saveMongo)
     }
 
     return true
@@ -109,12 +142,40 @@ const saveCF = async (user, assets) => {
   }
 };
 
-const getCF = async (user) => {
+const getCF = async (user,username) => {
   let tag = " | getCF | "
   try{
     log.info(tag, "input: ",{user})
 
     let cf = await redis.smembers(user+":altfolio")
+
+    //get members
+    let portfolio = await redis.smembers(user+":altfolio")
+
+    //save to mongo
+    //get user from mongo
+    let userInfo = await usersDB.findOne({user})
+    log.info(tag, "userInfo: ",userInfo)
+    if(userInfo){
+      log.info(tag, "update user portfolio: ")
+      //for each symbol NOT in mongo
+      for(let i = 0; i < portfolio.length; i++){
+        let asset =  portfolio[i]
+        if(userInfo.portfolio.indexOf(asset) === -1){
+          //save
+          await usersDB.update({user},{ $addToSet: { "portfolio":asset } })
+        }
+      }
+    } else {
+      let userInfo = {
+        user,
+        username,
+        portfolio,
+      }
+      log.info(tag,"userInfo: ",userInfo)
+      let saveMongo = await usersDB.insert(userInfo)
+      log.info(tag,"saveMongo: ",saveMongo)
+    }
 
     return cf
   }catch(e){

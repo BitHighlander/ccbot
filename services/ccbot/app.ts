@@ -55,6 +55,7 @@ integrations['coincapRive'] = coincapRive
 
 interface Data {
     user:string
+    username:string
     channel:string
     text:string
 }
@@ -67,7 +68,7 @@ const Discord = require('discord.js');
 const bot = new Discord.Client();
 
 let discordChannel = process.env['DISCORD_BOT_CHANNEL']
-let botUserId = process.env['BOT_USER_ID'] || '865670112611008524'
+let DISCORD_ADMIN_USERID = process.env['DISCORD_ADMIN_USERID']
 
 let msg:any
 if(!process.env['DISCORD_BOT_TOKEN']) throw Error("env DISCORD_BOT_TOKEN required!")
@@ -90,10 +91,11 @@ bot.on('message', async function (message:any) {
             let data:Data = {
                 channel:message.channel.name,
                 user:message.author.id,
+                username:message.author.username,
                 text:message.content
             }
             let session = 'discord'
-            let responses = await deliberate_on_input(session,data,data.user)
+            let responses = await deliberate_on_input(session,data,data.username)
             log.info('responses: ',responses)
             if(data.channel === discordChannel){
                 //save in mongo for scoring later
@@ -138,6 +140,7 @@ bot.on('message', async function (message:any) {
                         }
                     }
                     if(publish.length === 5){
+                        //custom window 1 coin
                         //tokens to view view
                         log.info(tag,"publish: ",publish)
                         const exampleEmbed = new Discord.MessageEmbed()
@@ -164,6 +167,53 @@ bot.on('message', async function (message:any) {
                         message.channel.send(publish.toString().replace(searchRegExp, replaceWith));
                     }
                 }
+
+                //display views
+                if(responses.views && responses.views.length > 0){
+                    //
+                    for(let i = 0; i < responses.views.length; i++){
+                        let view = responses.views[i]
+                        //debug
+                        // message.channel.send(JSON.stringify(view));
+
+                        switch(view.type) {
+                            case 'balances':
+                                // code block
+                                let allFields:any = []
+                                let coins = Object.keys(view.data)
+                                for(let i = 0; i < coins.length; i++){
+                                    let coin = coins[i]
+                                    //allFields[coin] = view.data[coin]
+                                    let entry = {
+                                        name:coin,
+                                        value:view.data[coin],
+                                        inline: true,
+                                    }
+                                    allFields.push(entry)
+                                }
+
+                                //view to discord
+                                const exampleEmbed = new Discord.MessageEmbed()
+                                    .setColor("#0099ff")
+                                    .setAuthor(
+                                        "Altfolio Balances",
+                                        "https://assets.coincap.io/assets/icons/"+publish[0]+"@2x.png",
+                                        "https://coincap.io/assets/"+publish[0]+""
+                                    )
+                                    .addFields(
+                                        allFields
+                                    )
+
+                                message.channel.send(exampleEmbed);
+                                break;
+                            case 'cf':
+                                // code block
+                                break;
+                            default:
+                            // code block
+                        }
+                    }
+                }
             }
         }
         return
@@ -184,6 +234,7 @@ const deliberate_on_input = async function(session:any,data:Data,username:string
     const tag = " | deliberate_on_input | "
     try{
         let output:any = {}
+        output.views = []
         output.sentences = []
         log.info(tag,"session: ",session)
         log.info(tag,"data: ",data)
@@ -210,6 +261,33 @@ const deliberate_on_input = async function(session:any,data:Data,username:string
         const tokens = tokenizer.getTokens(sentences)
         log.debug(tag,"tokens: ",tokens)
 
+        //admin
+        if(tokens[0] === "hi" && data.user === DISCORD_ADMIN_USERID){
+            output.sentences.push('hello admin!')
+        }
+
+        //balances
+        if(tokens[0] === 'balance'){
+            let allBalances = await redis.hgetall(data.user+":balances")
+            log.info(tag,"allBalances: ",allBalances)
+            if(Object.keys(allBalances).length === 0){
+                let newBalances:any = {}
+                newBalances['USDT'] = 1000
+                await redis.hmset(data.user+":balances",newBalances)
+                output.sentences.push('New User detected! Free moniez given 1000USDT')
+            } else {
+                //build balance view
+                output.views.push({
+                    type:'balances',
+                    data:allBalances
+                })
+                output.sentences.push('View your current balances')
+            }
+        }
+
+
+
+        //cc bot OG
         if(tokens[0] === "cc" || tokens[0] === "ccv2" || tokens[0] === "Cc"){
             //cc bot
             let firstToken = tokens[1]
@@ -268,9 +346,9 @@ const deliberate_on_input = async function(session:any,data:Data,username:string
                         assets = assets.split(",");
                         log.info("assets: ",assets)
 
-                        await saveCF(user, assets);
+                        await saveCF(user, assets, username);
                     } else {
-                        assets = await getCF(user);
+                        assets = await getCF(user,username);
                     }
 
 
@@ -336,7 +414,6 @@ const deliberate_on_input = async function(session:any,data:Data,username:string
                     }
                     break
             }
-
         }
 
         for (let i = 0; i < output.sentences.length; i++) {
@@ -356,10 +433,11 @@ const deliberate_on_input = async function(session:any,data:Data,username:string
                 const commandTokens = tokenizer.getTokens(command)
                 log.debug(tag,"commandTokens: ",commandTokens)
 
-                let result = " beeboop"
-
-                console.log(tag,"result:", result)
-                output.sentences.push(JSON.stringify(result))
+                //TODO command modules
+                // let result = " beeboop"
+                //
+                // console.log(tag,"result:", result)
+                // output.sentences.push(JSON.stringify(result))
 
             }
         }
