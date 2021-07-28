@@ -204,15 +204,30 @@ const delCF = async (user) => {
 const help = () => {
   return `
 *Main Command*
-  \`ccv2 [coin1,coin2,coin3...coinN]\` (no spaces between coins)
+  \`cc [coin1,coin2,coin3...coinN]\` (no spaces between coins)
 
 *Coinfolio*
   Save your coinfolio
-    \`ccv2 cf [coin1,coin2,coin3...coinN]\`
+    \`cc cf [coin1,coin2,coin3...coinN]\`
   Query your coinfolio
-    \`ccv2 cf\`
+    \`cc cf\`
   Delete you coinfolio
-    \`cc delete\`  
+    \`cc delete\`
+    
+ *MOCK Balances*
+ 
+ balances
+    \`view your mock balances\`
+ 
+ percentages
+    \`view your target percentages\`
+    
+ rebalance
+    \`perform your rebalance trade\`     
+
+ setPercentage *asset *percentage
+    \`example: setPercentages BTC 100\` 
+
 `
 }
 

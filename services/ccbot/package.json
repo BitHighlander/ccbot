@@ -15,9 +15,11 @@
     "docker:push:all": "npm run build && npm run docker:build && npm run docker:tag && npm run docker:push"
   },
   "dependencies": {
+    "@pioneer-platform/accounting": "^6.2.2",
     "@pioneer-platform/default-mongo": "^8.1.5",
     "@pioneer-platform/default-redis": "latest",
     "@pioneer-platform/loggerdog": "latest",
+    "@pioneer-platform/pioneer-rebalance": "^6.2.9",
     "asciichart": "^1.5.9",
     "discord.js": "^12.5.3",
     "dotenv": "^8.2.0",

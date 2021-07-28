@@ -1,0 +1,25 @@
+{
+  "name": "@pioneer-platform/pioneer-rebalance",
+  "version": "6.2.9",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "run-test": "npm run build && node __tests__/test-module.js",
+    "build": "tsc "
+  },
+  "dependencies": {
+    "@pioneer-platform/coincap": "^8.1.5",
+    "@pioneer-platform/loggerdog": "latest"
+  },
+  "devDependencies": {
+    "@types/jest": "^25.2.3",
+    "@types/node": "^13.13.15",
+    "@types/source-map-support": "^0.5.1",
+    "jest": "^26.1.0",
+    "onchange": "^7.0.2",
+    "serve": "^11.3.2",
+    "source-map-support": "^0.5.19",
+    "ts-jest": "^25.4.0",
+    "typescript": "^3.9.7"
+  }
+}

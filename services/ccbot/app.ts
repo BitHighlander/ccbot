@@ -20,6 +20,9 @@ log.info(easterEggCommands)
 
 const { getMarketData, chart1d, saveCF, getCF, delCF, help } = require('../v2/commands');
 
+let rebalance = require('@pioneer-platform/pioneer-rebalance')
+const Accounting = require('@pioneer-platform/accounting')
+const accounting = new Accounting(redis)
 
 const Tokenizer = require('sentence-tokenizer');
 const tokenizer = new Tokenizer('reddit');
@@ -177,6 +180,36 @@ bot.on('message', async function (message:any) {
                         // message.channel.send(JSON.stringify(view));
 
                         switch(view.type) {
+                            case 'percentages':
+                                // code block
+                                let allFieldsPercentages:any = []
+                                let targets = Object.keys(view.data)
+                                for(let i = 0; i < targets.length; i++){
+                                    let coin = targets[i]
+                                    let entry = {
+                                        name:coin,
+                                        value:view.data[coin],
+                                        inline: true,
+                                        setColor: '#ff002b'
+                                    }
+                                    allFieldsPercentages.push(entry)
+                                }
+
+                                //view to discord
+                                const exampleEmbedPercent = new Discord.MessageEmbed()
+                                    .setColor("#0099ff")
+                                    .setAuthor(
+                                        'Your Target portfolio percentages'
+                                    )
+                                    .addFields(
+                                        allFieldsPercentages
+                                    )
+                                    .setTimestamp()
+                                    .setFooter("CoinCap", "https://iconape.com/wp-content/png_logo_vector/coincap.png");
+
+
+                                message.channel.send(exampleEmbedPercent);
+                                break;
                             case 'balances':
                                 // code block
                                 let allFields:any = []
@@ -186,7 +219,7 @@ bot.on('message', async function (message:any) {
                                     //allFields[coin] = view.data[coin]
                                     let entry = {
                                         name:coin,
-                                        value:view.data[coin],
+                                        value:await accounting.balance(data.user+":balances",coin),
                                         inline: true,
                                         setColor: '#ff002b'
                                     }
@@ -267,18 +300,6 @@ bot.on('message', async function (message:any) {
                                     message.channel.send(exampleEmbed);
 
                                 }
-                                // log.info(tag,"addData: ",addData)
-                                // //view to discord
-                                // const exampleEmbed2 = new Discord.MessageEmbed()
-                                //     .setColor("#0099ff")
-                                //     .setAuthor(
-                                //         "Altfolio"
-                                //     )
-                                //     .addFields(
-                                //         addData
-                                //     )
-                                //
-                                // message.channel.send(exampleEmbed2);
                                 break;
                             default:
                             // code block
@@ -337,15 +358,18 @@ const deliberate_on_input = async function(session:any,data:Data,username:string
             output.sentences.push('hello admin!')
         }
 
+        //admin override give balance
+        if(tokens[0] === "credit" && data.user === DISCORD_ADMIN_USERID){
+            //TODO
+        }
+
         //balances
         if(tokens[0] === 'balance' || tokens[0] === 'balances'){
             let allBalances = await redis.hgetall(data.user+":balances")
             log.info(tag,"allBalances: ",allBalances)
             if(Object.keys(allBalances).length === 0){
-                let newBalances:any = {}
-                newBalances['USDT'] = 1000
-                await redis.hmset(data.user+":balances",newBalances)
-                output.sentences.push('New User detected! Free moniez given 1000USDT')
+                let balanceNewOut = await(accounting.credit(data.user+":balances",1000,'USDT'))
+                output.sentences.push('New User detected! Free moniez given 1000 USDT')
             } else {
                 //build balance view
                 output.views.push({
@@ -356,7 +380,87 @@ const deliberate_on_input = async function(session:any,data:Data,username:string
             }
         }
 
+        //percentages
+        if(tokens[0] === 'percentages' || tokens[0] === 'percentage'){
+            let allBalances = await redis.hgetall(data.user+":percentages")
+            if(Object.keys(allBalances).length === 0){
+                //
+                output.sentences.push('You must set your altfolio percentages.')
+                output.sentences.push('usage: setPercent *asset *amount')
+                output.sentences.push('example: setPercent DOGE 100')
+            } else {
+                //build balance view
+                output.views.push({
+                    type:'percentages',
+                    data:allBalances
+                })
+            }
+        }
 
+        //rebalance
+        if(tokens[0] === 'rebalance' || tokens[0] === 'rebalancer'){
+            let allBalances = await redis.hgetall(data.user+":percentages")
+            if(Object.keys(allBalances).length === 0){
+                //
+                output.sentences.push('You must set your altfolio percentages.')
+                output.sentences.push('usage: setPercent *asset *amount')
+                output.sentences.push('example: setPercent DOGE 100')
+            }else{
+                //perform re-balance
+
+                //current balances
+                let allBalances = await redis.hgetall(data.user+":balances")
+                let targets = await redis.hgetall(data.user+":percentages")
+                log.info(tag,"targets: ",targets)
+                log.info(tag,"allBalances: ",allBalances)
+                let allBalancesNative:any = {}
+                let positions = Object.keys(allBalances)
+                for(let i = 0; i < positions.length; i++){
+                    let coin = positions[i]
+                    allBalancesNative[coin] = await(accounting.balance(data.user+":balances",coin))
+                }
+
+                //current targets
+                let limit = 1
+                let result = await rebalance.getAction(allBalancesNative,targets,limit)
+                log.info(tag,"result: ",result)
+
+                // output.sentences.push("performing mock trade: "+result.trade.pair)
+                output.sentences.push("summary: "+result.trade.summary)
+                let pair = result.trade.pair.split("_")
+                //debit amount in
+                let balanceNew = await(accounting.debit(data.user+":balances",result.trade.amountIn,pair[0]))
+                // output.sentences.push("balanceNew: "+pair[0]+ " "+balanceNew)
+                //credit amountOut
+                //debit amount in
+                let balanceNewOut = await(accounting.credit(data.user+":balances",result.trade.amountOut,pair[1]))
+                // output.sentences.push("balanceNewOut: "+pair[1]+ " "+balanceNewOut)
+
+                let allBalancesFinal = await redis.hgetall(data.user+":balances")
+                log.info(tag,"final balances: ",allBalancesFinal)
+
+                //let result = await perform_rebalance(data.user,allBalances,targets)
+                let allBalances2 = await redis.hgetall(data.user+":balances")
+                output.views.push({
+                    type:'balances',
+                    data:allBalances2
+                })
+            }
+        }
+
+        //setPercent
+        if(tokens[0] === 'setPercent' || tokens[0] === 'setPercentage' || tokens[0] === 'setpercent'){
+            let coin = tokens[1]
+            let percentage = tokens[2]
+            if(coin && percentage){
+                let saved = await redis.hset(data.user+":percentages",coin,percentage)
+                output.sentences.push('saved: '+saved)
+            } else {
+                output.sentences.push('invalid command')
+                output.sentences.push('usage: \n setPercent *asset *amount')
+                output.sentences.push('example: \n setPercent DOGE 100')
+            }
+        }
 
         //cc bot OG
         if(tokens[0] === "cc" || tokens[0] === "ccv2" || tokens[0] === "Cc"){
